@@ -40,3 +40,13 @@ code {
 .content-align {
   margin: 30px;
 }
+.user-profile {
+  margin-bottom: 15px;
+  margin-right: 21px;
+  height: 40px;
+  width: 40px;
+}
+.group-bar {
+  background-color: rgb(59 156 85 / 20%);
+  color: black;
+}
