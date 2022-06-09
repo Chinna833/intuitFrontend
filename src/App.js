@@ -6,6 +6,8 @@ import LoginForm from './components/LoginForm';
 import Home from './components/Home';
 import CreateBid from './components/CreateBid'
 import {BrowserRouter,Routes,Route} from "react-router-dom";
+import ForgotPass from './components/ForgotPass';
+import BidDetails from './components/BidDetails';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
             <Route path="/loginForm" element={<LoginForm/>}/>
             <Route path="/home" element={<Home/>}/>
             <Route path="/createBid" element={<CreateBid/>}/>
+            <Route path="/forgotPass" element={<ForgotPass/>}/>
+            <Route path="/bidDetails" element={<BidDetails/>}/>
         </Routes>
       </BrowserRouter>
     </div >

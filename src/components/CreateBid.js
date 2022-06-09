@@ -1,5 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
+import CreateBidService from "../services/CreateBidServicess";
 
 const CreateBid = () => {
     let [isOpen, setIsOpen] = useState(true)
@@ -10,6 +11,37 @@ const CreateBid = () => {
       function openModal() {
         setIsOpen(true)
       }
+      const [createdDetails,createBidDetails] = useState({
+        requestId:"",
+        createUser:"",
+        reqName:"",
+        reqDesc:"",
+        category:"",
+        noOfRequirement:"",
+        noOfHrsExpected:"",
+        reqExpiry:"",
+        maxCost:"",
+        requestStatus:"",
+        createTime:"",
+      });
+      const saveBidDetails = (e) =>{
+        // e.preventDefault();
+        CreateBidService.saveBidDetails(createdDetails)
+          .then((response)=>{
+            console.log(response);
+            if(response.typ=='S'){
+                window.alert("Creation Done Successfully");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+          console.log(createdDetails);
+      };
+      const handleChange = (e) =>{
+        const value = e.target.value;
+        createBidDetails({...createdDetails,[e.target.name]:value});
+      };
     
   return (
     <div className="color-bg form-special">
@@ -32,8 +64,8 @@ const CreateBid = () => {
                       </label>
                       <input
                         type="text"
-                        name="req-name"
-                        id="req-name"
+                        name="reqName"
+                        id="reqName" value={createdDetails.reqName} onChange={(e)=> handleChange(e)}
                         autoComplete="given-name"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full h-10 shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
@@ -45,11 +77,12 @@ const CreateBid = () => {
                         </label>
                         <div className="mt-1">
                         <textarea
-                            id="about"
-                            name="about"
-                            rows={3}
+                            id="reqDesc" value={createdDetails.reqDesc} onChange={(e)=> handleChange(e)}
+                            name="reqDesc" 
+                            rows={3} 
                             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
-                            defaultValue={''}
+                            
+                            
                         />
                         </div>
                         <p className="mt-2 text-sm text-gray-500">
@@ -63,7 +96,8 @@ const CreateBid = () => {
                       <select
                         id="category"
                         name="category"
-                        autoComplete="category-name"
+                        autoComplete="category" 
+                        value={createdDetails.category} onChange={(e)=> handleChange(e)}
                         className="mt-1 block w-full disabled py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
                         <option>Developement</option>   
@@ -76,9 +110,9 @@ const CreateBid = () => {
                         No Of Requirement 
                       </label>
                       <select
-                        id="countreq"
-                        name="category"
-                        autoComplete="category-name"
+                        id="noOfRequirement"
+                        name="noOfRequirement" value={createdDetails.noOfRequirement} onChange={(e)=> handleChange(e)}
+                        autoComplete="noOfRequirement" 
                         className="mt-1 block w-full disabled py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
                         <option>Less than 50</option>   
@@ -91,20 +125,20 @@ const CreateBid = () => {
                       </label>
                       <input
                         type="text"
-                        name="req-hours"
-                        id="req-hours"
+                        name="noOfHrsExpected" value={createdDetails.noOfHrsExpected} onChange={(e)=> handleChange(e)}
+                        id="noOfHrsExpected"
                         autoComplete="given-name" placeholder="Expected Hours of Completion"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full h-10 shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
                     <div className="col-span-3 sm:col-span-3">
                       <label htmlFor="req-date" className="block text-sm font-medium text-gray-700">
-                          Last Date & Time
+                          Max Date & Time
                       </label>
                       <input
                         type="text"
-                        name="req-hours"
-                        id="req-hours"
+                        name="reqExpiry" value={createdDetails.reqExpiry} onChange={(e)=> handleChange(e)}
+                        id="reqExpiry"
                         autoComplete="given-name"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full h-10 shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
@@ -115,82 +149,10 @@ const CreateBid = () => {
                       </label>
                       <input
                         type="text"
-                        name="req-hours"
-                        id="req-hours"
+                        name="maxCost" value={createdDetails.maxCost} onChange={(e)=> handleChange(e)}
+                        id="maxCost"
                         autoComplete="given-name"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full h-10 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-
-                    <div className="col-span-6 sm:col-span-3">
-                      <label htmlFor="Country" className="block text-sm font-medium text-gray-700">
-                        Country 
-                      </label>
-                      <select
-                        id="country"
-                        name="country"
-                        autoComplete="country-name"
-                        className="mt-1 block w-full disabled py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      >
-                        <option>Australia</option>                     
-                      </select>
-                    </div>
-                    <div className="col-span-6 sm:col-span-3">
-                      <label htmlFor="state" className="block text-sm font-medium text-gray-700">
-                        State
-                      </label>
-                      <select
-                        id="state"
-                        name="state"
-                        autoComplete="state-name"
-                        className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      >
-                        <option>New South Wales</option>
-                        <option>Queensland</option>
-                        <option>Northern Territory</option>
-                        <option>Western Australia</option>
-                        <option>South Australia</option>
-                        <option>Victoria</option>
-                        <option>Australian Capital Territory</option>
-                        <option>Tasmania</option>
-                      </select>
-                    </div>
-                    <div className="col-span-6 sm:col-span-6 lg:col-span-3">
-                      <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-                        City
-                      </label>
-                      <input
-                        type="text"
-                        name="city"
-                        id="city"
-                        autoComplete="address-level2"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-
-                    <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                      <label htmlFor="region" className="block text-sm font-medium text-gray-700">
-                        State / Province
-                      </label>
-                      <input
-                        type="text"
-                        name="region"
-                        id="region"
-                        autoComplete="address-level1"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-
-                    <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                      <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700">
-                        ZIP / Postal code
-                      </label>
-                      <input
-                        type="text"
-                        name="postal-code"
-                        id="postal-code"
-                        autoComplete="postal-code"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-6">
@@ -203,7 +165,7 @@ const CreateBid = () => {
                             name="comments"
                             rows={3}
                             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
-                            defaultValue={''}
+                            
                         />
                         </div>
                         <p className="mt-2 text-sm text-gray-500">
@@ -270,7 +232,7 @@ const CreateBid = () => {
                   </div>
 
                   <div className="mt-4">
-                    <button
+                    <button 
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       onClick={closeModal}

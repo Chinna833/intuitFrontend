@@ -1,5 +1,44 @@
+import { useNavigate } from "react-router-dom" 
+import RegistrationService from "../services/RegistrationService";
+import {useState} from 'react';
+
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+  const [userDetails,setUserDetails] = useState({
+    id:"",
+    emailId:"",
+    password:"",
+    firstName:"",
+    lastName:"",
+    phoneNumber:"",
+    country:"",
+    street:"",
+    state:"",
+    city:"",
+    postcode:"",
+    img:"",
+    notif_type:"",
+  });
+  const saveUserDetails = (e) =>{
+    e.preventDefault();
+    RegistrationService.saveUserDetails(userDetails)
+      .then((response)=>{
+        console.log(response);
+        if(response.typ=='S'){
+            window.alert("User Creation Done Successfully.Try to login with the userid");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        window.alert("User Creation Failed");
+      });
+      navigate('/login')
+  };
+  const handleChange = (e) =>{
+    const value = e.target.value;
+    setUserDetails({...userDetails,[e.target.name]:value});
+  };
   return (
     <div className="color-bg form-special">
        <div className="mt-10 sm:mt-0">
@@ -17,12 +56,12 @@ const LoginForm = () => {
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-6 sm:col-span-3">
                       <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
-                        First name
+                        First Name
                       </label>
                       <input
                         type="text"
-                        name="first-name"
-                        id="first-name"
+                        name="firstName"
+                        id="firstName" value={userDetails.firstName} onChange={(e)=> handleChange(e)}
                         autoComplete="given-name"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full h-10 shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
@@ -30,12 +69,13 @@ const LoginForm = () => {
 
                     <div className="col-span-6 sm:col-span-3">
                       <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">
-                        Last name
+                        Last Name
                       </label>
                       <input
                         type="text"
-                        name="last-name"
-                        id="last-name"
+                        name="lastName"
+                        id="lastName"
+                        value={userDetails.lastName} onChange={(e)=> handleChange(e)}
                         autoComplete="family-name"
                         className="h-10 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
@@ -43,13 +83,13 @@ const LoginForm = () => {
 
                     <div className="col-span-6 sm:col-span-3">
                       <label htmlFor="email-address" className="block text-sm font-medium text-gray-700">
-                        Email address
+                        Email Address
                       </label>
                       <input
                         type="text"
-                        name="email-address"
-                        id="email-address"
-                        autoComplete="email"
+                        name="emailId"
+                        id="emailId"
+                        autoComplete="email" value={userDetails.emailId} onChange={(e)=> handleChange(e)}
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -61,7 +101,7 @@ const LoginForm = () => {
                         type="text"
                         name="password"
                         id="password"
-                        autoComplete="email"
+                        autoComplete="password" value={userDetails.password} onChange={(e)=> handleChange(e)}
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -82,35 +122,21 @@ const LoginForm = () => {
                         Mobile Phone
                       </label>
                       <input
-                        type="text"
-                        name="reenter-password"
-                        id="reenter-password"
-                        autoComplete="email" placeholder="+61XXXXXXXX"
+                        type="number"
+                        name="phoneNumber"
+                        id="phoneNumber" value={userDetails.phoneNumber} onChange={(e)=> handleChange(e)}
+                        autoComplete="phoneNumber" placeholder="+61XXXXXXXX"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
-                      <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-                        Category
-                      </label>
-                      <select
-                        id="category"
-                        name="category"
-                        autoComplete="category-name"
-                        className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      >
-                        <option>Business</option>
-                        <option>Traiding</option>
-                      </select>
-                    </div>
-                    <div className="col-span-6 sm:col-span-3">
-                      <label htmlFor="Country" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="country" className="block text-sm font-medium text-gray-700">
                         Country 
                       </label>
                       <select
                         id="country"
                         name="country"
-                        autoComplete="country-name"
+                        autoComplete="country" value={userDetails.country} onChange={(e)=> handleChange(e)}
                         className="mt-1 block w-full disabled py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
                         <option>Australia</option>                     
@@ -123,7 +149,7 @@ const LoginForm = () => {
                       <select
                         id="state"
                         name="state"
-                        autoComplete="state-name"
+                        autoComplete="state"  value={userDetails.state} onChange={(e)=> handleChange(e)}
                         className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
                         <option>New South Wales</option>
@@ -136,20 +162,6 @@ const LoginForm = () => {
                         <option>Tasmania</option>
                       </select>
                     </div>
-
-                    <div className="col-span-3">
-                      <label htmlFor="street-address" className="block text-sm font-medium text-gray-700">
-                        Street address
-                      </label>
-                      <input
-                        type="text"
-                        name="street-address"
-                        id="street-address"
-                        autoComplete="street-address"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-
                     <div className="col-span-6 sm:col-span-6 lg:col-span-2">
                       <label htmlFor="city" className="block text-sm font-medium text-gray-700">
                         City
@@ -158,7 +170,7 @@ const LoginForm = () => {
                         type="text"
                         name="city"
                         id="city"
-                        autoComplete="address-level2"
+                        autoComplete="address-level2" value={userDetails.city} onChange={(e)=> handleChange(e)}
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -169,9 +181,9 @@ const LoginForm = () => {
                       </label>
                       <input
                         type="text"
-                        name="region"
-                        id="region"
-                        autoComplete="address-level1"
+                        name="state"
+                        id="state"
+                        autoComplete="address-level1" value={userDetails.state} onChange={(e)=> handleChange(e)}
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -181,10 +193,10 @@ const LoginForm = () => {
                         ZIP / Postal code
                       </label>
                       <input
-                        type="text"
-                        name="postal-code"
-                        id="postal-code"
-                        autoComplete="postal-code"
+                        type="number"
+                        name="postcode"
+                        id="postcode"
+                        autoComplete="postcode" value={userDetails.postcode} onChange={(e)=> handleChange(e)}
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -202,14 +214,6 @@ const LoginForm = () => {
                       </button>
                     </div>
                   </div>
-                </div>
-                <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                  <button
-                    type="submit"
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Save
-                  </button>
                 </div>
               </div>
             </form>
@@ -235,52 +239,39 @@ const LoginForm = () => {
               <div className="shadow overflow-hidden sm:rounded-md m-5">
                 <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
                   <fieldset>
-                    <legend className="sr-only">By Email</legend>
-                    <div className="text-base font-medium text-gray-900" aria-hidden="true">
-                      By Email
-                    </div>
-                    <div className="mt-4 space-y-4">
-                      <div className="flex items-start">
-                        <div className="flex items-center h-5">
-                          <input
-                            id="comments"
-                            name="comments"
-                            type="checkbox"
-                            className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded "
-                          />
-                        </div>
-                        <div className="ml-3 text-sm text-left">
-                          <label htmlFor="comments" className="font-medium text-gray-700 ">
-                            Comments
-                          </label>
-                          <p className="text-gray-500">Get notified when someones posts a comment on a posting.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </fieldset>
-                  <fieldset>
                     <legend className="contents text-base font-medium text-gray-900">Push Notifications</legend>
                     <p className="text-sm text-gray-500">This is delivered via SMS to your mobile phone.</p>
                     <div className="mt-4 space-y-4">
                       <div className="flex items-center">
                         <input
-                          id="push-email"
-                          name="push-notifications"
-                          type="radio"
+                          id="eNotif"
+                          name="eNotif"
+                          type="radio" value={userDetails.eNotif}  onChange={(e)=> handleChange(e)}
                           className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                         />
                         <label htmlFor="push-email" className="ml-3 block text-sm font-medium text-gray-700">
-                          Same as email
+                          Email
                         </label>
                       </div>
                       <div className="flex items-center">
                         <input
-                          id="push-nothing"
-                          name="push-notifications"
-                          type="radio"
+                          id="pNotif"
+                          name="pNotif"
+                          type="radio" value={userDetails.pNotif}  onChange={(e)=> handleChange(e)}
                           className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                         />
-                        <label htmlFor="push-nothing" className="ml-3 block text-sm font-medium text-gray-700">
+                        <label htmlFor="push-email" className="ml-3 block text-sm font-medium text-gray-700">
+                          Phone
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          id="noNotif"
+                          name="noNotif"
+                          type="radio"  value={userDetails.noNotif}  onChange={(e)=> handleChange(e)}
+                          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                        />
+                        <label htmlFor="noNotif" className="ml-3 block text-sm font-medium text-gray-700">
                           No push notifications
                         </label>
                       </div>
@@ -289,7 +280,7 @@ const LoginForm = () => {
                 </div>
                 <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
                   <button
-                    type="submit"
+                    type="submit" onClick={saveUserDetails}
                     className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Save
